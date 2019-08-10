@@ -3,12 +3,14 @@
 namespace Gratefulness\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @author Hélder Pestana <hgpestana@gmail.com>
  *
  * @ApiResource()
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="Gratefulness\Repository\QuoteRepository")
  */
 class Quote
@@ -40,9 +42,23 @@ class Quote
     /**
      * @var string
      *
-     * @ORM\Column(name="language", type="string", length=5)
+     * @ORM\Column(name="language", type="string", length=5, nullable=false)
      */
     private $language;
+
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="approved", type="boolean", nullable=false)
+     */
+    private $approved;
+
+    /**
+     * @var DateTime
+     *
+     * @ORM\Column(name="created_at", type="datetime", nullable=false)
+     */
+    private $createdAt;
 
     /**
      * @return string|null
@@ -110,5 +126,35 @@ class Quote
         $this->language = $language;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function setDefaults() : void
+    {
+        if ( empty($this->isApproved()) ) {
+            $this->approved = false;
+        }
+        if ( $this->getCreatedAt() == null ) {
+            $this->createdAt = new DateTime('now');
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isApproved() : bool
+    {
+        return $this->approved;
+    }
+
+    /**
+     * @return DateTime
+     */
+    public function getCreatedAt() : DateTime
+    {
+        return $this->createdAt;
     }
 }
