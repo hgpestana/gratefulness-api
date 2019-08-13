@@ -1,3 +1,3 @@
-#index:
-#    path: /
-#    controller: Gratefulness\Controller\DefaultController::index
+swagger_ui:
+  path: /
+  controller: api_platform.swagger.action.ui

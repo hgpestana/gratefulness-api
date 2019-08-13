@@ -1,0 +1,19 @@
+Gratefulness\Entity\Quote:
+  collectionOperations:
+    get: ~
+    post: ~
+  itemOperations:
+    get: ~
+    get_random:
+      method: 'GET'
+      path: '/quotes/random/{language}'
+      controller: Gratefulness\Controller\GetRandomQuote
+      swagger_context:
+        parameters:
+          - in: path
+            name: language
+            type: string
+            enum:
+              - en
+              - pt
+            required: true
