@@ -13,6 +13,11 @@ class GetRandomQuote
     /** @var QuoteRepository */
     private $quoteRepository;
 
+    /**
+     * GetRandomQuote constructor.
+     *
+     * @param QuoteRepository $quoteRepository
+     */
     public function __construct(QuoteRepository $quoteRepository)
     {
         $this->quoteRepository = $quoteRepository;
@@ -21,11 +26,16 @@ class GetRandomQuote
     /**
      * @param string $language
      *
-     * @return Quote
+     * @return Quote[]
      */
-    public function __invoke(string $language) : Quote
+    public function __invoke(string $language) : array
     {
-        $quotes = $this->quoteRepository->findBy([ 'language' => $language ]);
-        return $quotes[ array_rand($quotes, 1) ];
+        $result = [];
+
+        $quotes = $this->quoteRepository->findBy([ 'language' => $language, 'approved' => true ]);
+        if ( !empty($quotes) ) {
+            $result[] = $quotes[ array_rand($quotes, 1) ];
+        }
+        return $result;
     }
 }
