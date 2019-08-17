@@ -2,10 +2,14 @@
 
 namespace Gratefulness\Repository;
 
-use Gratefulness\Entity\Quote;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\QueryException;
+use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Gratefulness\Entity\Quote;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -18,6 +22,8 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class QuoteRepository extends ServiceEntityRepository
 {
+    public const ITEMS_PER_PAGE = 20;
+
     /**
      * QuoteRepository constructor.
      *
@@ -70,4 +76,31 @@ class QuoteRepository extends ServiceEntityRepository
 
         return true;
     }
+
+    /**
+     * Returns a paginated list of approved quotes
+     *
+     * @param int $page
+     *
+     * @return Paginator
+     * @throws QueryException
+     */
+    public function findApprovedQuotesPaginated(int $page = 1) : Paginator
+    {
+        $firstResult = ($page - 1) * self::ITEMS_PER_PAGE;
+
+        $queryBuilder = $this->createQueryBuilder('q');
+        $queryBuilder->select('q')
+            ->where('q.approved = :approved')
+            ->setParameter('approved', true);
+
+        $criteria = Criteria::create()
+            ->setFirstResult($firstResult)
+            ->setMaxResults(self::ITEMS_PER_PAGE);
+        $queryBuilder->addCriteria($criteria);
+
+        $doctrinePaginator = new DoctrinePaginator($queryBuilder);
+        return new Paginator($doctrinePaginator);
+    }
+
 }
