@@ -2,6 +2,7 @@
 
 namespace Gratefulness\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
@@ -10,7 +11,6 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Hélder Pestana <hgpestana@gmail.com>
  *
  * @ApiResource()
- * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="Gratefulness\Repository\QuoteRepository")
  */
 class Quote
@@ -20,8 +20,9 @@ class Quote
      * @var string
      *
      * @ORM\Id()
-     * @ORM\GeneratedValue(strategy="UUID")
-     * @ORM\Column(name="id", type="guid")
+     * @ORM\Column(name="id", type="uuid")
+     * @ORM\GeneratedValue(strategy="CUSTOM")
+     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
      */
     private $id;
 
@@ -59,6 +60,13 @@ class Quote
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
     private $createdAt;
+
+
+    public function __construct()
+    {
+        $this->approved = false;
+        $this->createdAt = new DateTime('now');
+    }
 
     /**
      * @return string|null
@@ -126,20 +134,6 @@ class Quote
         $this->language = $language;
 
         return $this;
-    }
-
-    /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
-     */
-    public function setDefaults() : void
-    {
-        if ( empty($this->isApproved()) ) {
-            $this->approved = false;
-        }
-        if ( $this->getCreatedAt() == null ) {
-            $this->createdAt = new DateTime('now');
-        }
     }
 
     /**
