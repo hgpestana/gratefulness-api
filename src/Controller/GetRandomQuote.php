@@ -5,22 +5,22 @@ namespace Gratefulness\Controller;
 
 
 use Gratefulness\Entity\Quote;
-use Gratefulness\Repository\QuoteRepository;
+use Gratefulness\Manager\QuoteManager;
 
 class GetRandomQuote
 {
 
-    /** @var QuoteRepository */
-    private $quoteRepository;
+    /** @var QuoteManager */
+    private $manager;
 
     /**
      * GetRandomQuote constructor.
      *
-     * @param QuoteRepository $quoteRepository
+     * @param QuoteManager $manager
      */
-    public function __construct(QuoteRepository $quoteRepository)
+    public function __construct(QuoteManager $manager)
     {
-        $this->quoteRepository = $quoteRepository;
+        $this->manager = $manager;
     }
 
     /**
@@ -30,12 +30,6 @@ class GetRandomQuote
      */
     public function __invoke(string $language) : array
     {
-        $result = [];
-
-        $quotes = $this->quoteRepository->findBy([ 'language' => $language, 'approved' => true ]);
-        if ( !empty($quotes) ) {
-            $result[] = $quotes[ array_rand($quotes, 1) ];
-        }
-        return $result;
+        return $this->manager->getRandomQuotes($language, 1);
     }
 }
