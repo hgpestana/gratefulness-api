@@ -2,13 +2,14 @@ Gratefulness\Entity\Quote:
   collectionOperations:
     get: ~
     post: ~
-  itemOperations:
-    get: ~
     get_random:
       method: 'GET'
       path: '/quotes/random/{language}'
       controller: Gratefulness\Controller\GetRandomQuote
+      pagination_enabled: false
       swagger_context:
+        summary: Helllo Wooolrrdd
+        description: Helllo Wooolrrdd
         parameters:
           - in: path
             name: language
@@ -17,3 +18,5 @@ Gratefulness\Entity\Quote:
               - en
               - pt
             required: true
+  itemOperations:
+    get: ~
