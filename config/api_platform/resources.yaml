@@ -1,15 +1,21 @@
 Gratefulness\Entity\Quote:
   collectionOperations:
-    get: ~
-    post: ~
+    get:
+      swagger_context:
+        summary: 'Returns a Quote collection of approved quotes.'
+        description: 'This endpoint returns a collection of approved Quotes. Uses pagination.'
+    post:
+      swagger_context:
+        summary: 'Allows submitting a Quote object to the API platform.'
+        description: 'This endpoint allows the creation of unapproved Quote objects in the platform.'
     get_random:
       method: 'GET'
       path: '/quotes/random/{language}'
       controller: Gratefulness\Controller\GetRandomQuote
       pagination_enabled: false
       swagger_context:
-        summary: Helllo Wooolrrdd
-        description: Helllo Wooolrrdd
+        summary: 'Returns a Quote collection with a random obtained Quote for the given language.'
+        description: 'This endpoint returns a collection with a single random Quote for the language passed in :language'
         parameters:
           - in: path
             name: language
@@ -19,4 +25,7 @@ Gratefulness\Entity\Quote:
               - pt
             required: true
   itemOperations:
-    get: ~
+    get:
+      swagger_context:
+        summary: 'Returns a single Quote object with the give id.'
+        description: "This endpoint allows for the retrieval of a single quote object using the object's UUID"

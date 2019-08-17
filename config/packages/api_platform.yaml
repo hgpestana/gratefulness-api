@@ -1,7 +1,7 @@
 api_platform:
   title: 'Gratefulness API'
-  description: 'Lorem ipsum'
-  version: 0.0.1
+  description: 'This is a simple API that is used by the gratefulness.guru frontend in order to obtain and post quotes from and to the backend.'
+  version: 0.0.3
   show_webby: false
   enable_re_doc: false
   graphql:
