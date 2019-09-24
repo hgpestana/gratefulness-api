@@ -29,7 +29,7 @@ class Quote
     /**
      * @var string
      *
-     * @ORM\Column(name="sentence", type="text", unique=true, nullable=false)
+     * @ORM\Column(name="sentence", type="text", nullable=false)
      */
     private $sentence;
 
